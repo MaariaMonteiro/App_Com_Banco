@@ -5,11 +5,18 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -19,12 +26,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import np.com.bimalkafle.firebaseauthdemoapp.AuthState
 import np.com.bimalkafle.firebaseauthdemoapp.AuthViewModel
+import np.com.bimalkafle.firebaseauthdemoapp.ui.theme.Purple700
 
 @Composable
 fun SignupPage(
@@ -60,9 +73,16 @@ fun SignupPage(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Signup Page", fontSize = 32.sp)
+        Text(text = "Página de Cadastro",
+            fontSize = 28.sp,
+            color = Purple700,
+            style = MaterialTheme.typography.headlineMedium.copy(
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 1.sp
+            ),
+            modifier = Modifier.padding(bottom = 32.dp)
+        )
 
-        Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
             value = email,
@@ -70,9 +90,25 @@ fun SignupPage(
                 email = it
             },
             label = {
-                Text(text = "Email")
-            }
+                Text(text = "Email:",
+                    color = Color.Gray
+                )
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 32.dp),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color.White,
+                unfocusedContainerColor = Color.White,
+                focusedLabelColor = Purple700,
+                focusedIndicatorColor = Purple700,
+                unfocusedIndicatorColor = Color.LightGray
+            ),
+            shape = MaterialTheme.shapes.medium,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
         )
+
+
 
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -81,26 +117,70 @@ fun SignupPage(
             onValueChange = {
                 password = it
             },
+            visualTransformation = PasswordVisualTransformation(),
+
             label = {
-                Text(text = "Password")
-            }
+                Text(text = "Senha:",
+                    color = Color.Gray)
+
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 32.dp),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color.White,
+                unfocusedContainerColor = Color.White,
+                focusedLabelColor = Purple700,
+                focusedIndicatorColor = Purple700,
+                unfocusedIndicatorColor = Color.LightGray
+            ),
+            shape = MaterialTheme.shapes.medium,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+
         )
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
             onClick = {
                 authViewModel.signup(email, password)
-            }, enabled = authState.value != AuthState.Loading
+            }, enabled = authState.value != AuthState.Loading,
+                    modifier = Modifier
+                    .fillMaxWidth()
+                .padding(horizontal = 40.dp)
+                .height(50.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Purple700,
+                contentColor = Color.White,
+                disabledContainerColor = Purple700.copy(alpha = 0.5f)
+            ),
+            shape = RoundedCornerShape(12.dp),
+            elevation = ButtonDefaults.buttonElevation(
+                defaultElevation = 4.dp,
+                pressedElevation = 8.dp
+            )
         ) {
-            Text(text = "Create account")
+            Text(text = "Criar conta",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium)
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
 
         TextButton(onClick = {
             navController.navigate("login")
-        }) {
-            Text(text = "Already have an account, Login")
+        },
+            modifier = Modifier.padding(top = 8.dp)
+
+        ) {
+            Text(text = "Já possui uma conta? ",
+                color = Color.Gray,
+                fontSize = 14.sp)
+            Text(
+                text = "Faça Login!",
+                color = Purple700,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                textDecoration = TextDecoration.Underline
+            )
         }
 
     }
